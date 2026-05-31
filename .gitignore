@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+blog-site/.next/
+blog-site/out/
+
+# env files - never commit secrets
+.env
+.env.local
+.env.*.local
+
+# build output
+mcp-server/dist/
+
+# deploy artifacts
+*.zip
+
+# misc
+.DS_Store
+*.pem

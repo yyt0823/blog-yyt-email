@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS blog_yyt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE blog_yyt;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  api_key VARCHAR(80) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(500) NOT NULL,
+  slug VARCHAR(600) UNIQUE NOT NULL,
+  content LONGTEXT NOT NULL,
+  excerpt TEXT,
+  tags JSON,
+  author_id INT NOT NULL,
+  status ENUM('draft', 'published') DEFAULT 'draft',
+  published_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_slug (slug),
+  INDEX idx_status_date (status, published_at)
+);
