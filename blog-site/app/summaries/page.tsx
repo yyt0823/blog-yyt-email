@@ -11,13 +11,13 @@ interface Post {
   author_name: string;
 }
 
-async function getPosts(): Promise<Post[]> {
+async function getSummaries(): Promise<Post[]> {
   const [rows] = await pool.execute<any[]>(
     `SELECT p.id, p.title, p.slug, p.excerpt, p.tags, p.published_at, u.name AS author_name
      FROM posts p
      JOIN users u ON p.author_id = u.id
      WHERE p.status = 'published'
-       AND (p.tags IS NULL OR NOT JSON_CONTAINS(p.tags, '"summary"'))
+       AND JSON_CONTAINS(p.tags, '"summary"')
      ORDER BY p.published_at DESC`
   );
   return rows.map(r => ({ ...r, tags: Array.isArray(r.tags) ? r.tags : (r.tags ? JSON.parse(r.tags) : []) }));
@@ -31,24 +31,26 @@ function formatDate(date: string) {
   });
 }
 
+export const metadata = { title: 'Session Summaries — Campus App Dev Blog' };
+
 export const dynamic = 'force-dynamic';
 
-export default async function HomePage() {
-  const posts = await getPosts();
+export default async function SummariesPage() {
+  const posts = await getSummaries();
 
   return (
     <div>
       <div className="mb-12">
-        <h1 className="text-3xl font-bold text-white mb-3">Campus App Dev Log</h1>
+        <h1 className="text-3xl font-bold text-white mb-3">Session Summaries</h1>
         <p className="text-[#666] text-lg leading-relaxed">
-          Architecture decisions, technical deep-dives, and progress notes from building
-          the campus app — React Native · Java · Kafka · Redis · MySQL · AWS.
+          Detailed, learning-oriented logs of each working session — what was done,
+          the decisions made and why, problems hit, and what shipped.
         </p>
       </div>
 
       {posts.length === 0 ? (
         <p className="text-[#444] italic">
-          No posts yet. Start writing via Claude Code using the campus-blog MCP tools.
+          No summaries yet. Publish one via Claude Code with the <code>/summary</code> command.
         </p>
       ) : (
         <div className="space-y-6">

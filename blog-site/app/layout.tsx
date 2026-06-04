@@ -24,7 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               campus.dev
             </a>
             <span className="text-[#444] select-none">/</span>
-            <span className="text-[#555] text-sm">tech log</span>
+            <nav className="flex items-center gap-4 text-sm">
+              <a href="/" className="text-[#888] hover:text-blue-400 transition-colors">
+                posts
+              </a>
+              <a href="/summaries" className="text-[#888] hover:text-blue-400 transition-colors">
+                summaries
+              </a>
+            </nav>
           </div>
         </header>
 
